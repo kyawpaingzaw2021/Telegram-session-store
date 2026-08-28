@@ -78,8 +78,9 @@ class Referral(Base):
         Index('idx_referrals_referred_id', 'referred_id', unique=True),
     )
 
+# /tmp/data သို့ ပြောင်းလဲထားပါသည် (Permission error ရှင်းရန်)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(BASE_DIR, 'data')
+DATA_DIR = "/tmp/data"
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR, exist_ok=True)
 
