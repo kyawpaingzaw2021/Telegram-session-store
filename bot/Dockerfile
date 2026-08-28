@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p /data
+# ဖိုင်တွဲဆောက်ပြီး Permission အပြည့်အဝ (777) ပေးလိုက်ခြင်း
+RUN mkdir -p /app/data && chmod 777 /app/data
 
 CMD ["python", "-m", "bot.main"]
+
