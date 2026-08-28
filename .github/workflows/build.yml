@@ -20,8 +20,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./bot/Dockerfile
+          context: ./bot          # bot folder ကို အဓိက context အဖြစ် သတ်မှတ်မယ်
+          file: ./bot/Dockerfile  # Dockerfile ရှိတဲ့နေရာ
           push: true
           tags: kyawpaingzaw/telegram-session-store:latest
-          
