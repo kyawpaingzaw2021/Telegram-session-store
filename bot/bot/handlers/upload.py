@@ -5,9 +5,10 @@ from bot.config import is_admin
 from bot.keyboards.inline import get_back_button
 from database import crud
 
-SESSION_DIR = "sessions"
+# /tmp အောက်သို့ ပြောင်းလဲထားပါသည် (Permission error ရှင်းရန်)
+SESSION_DIR = "/tmp/sessions"
 if not os.path.exists(SESSION_DIR):
-    os.makedirs(SESSION_DIR)
+    os.makedirs(SESSION_DIR, exist_ok=True)
 DOWNLOAD_TIMEOUT = 300
 
 async def admin_upload_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -35,6 +36,8 @@ async def receive_uploaded_file(update: Update, context: ContextTypes.DEFAULT_TY
         await update.message.reply_text("❌ `.session` ဖိုင်ကိုသာ တင်ပေးပါ။")
         return
     status_msg = await update.message.reply_text(f"⏳ `{document.file_name}` ကို ဒေါင်းလုဒ်ဆွဲနေပါသည်...")
+    
+    file_path = "" # Exception အတွက် ကြိုတင်သတ်မှတ်ခြင်း
     try:
         file = await context.bot.get_file(
             document.file_id,
@@ -74,5 +77,5 @@ async def receive_uploaded_file(update: Update, context: ContextTypes.DEFAULT_TY
             reply_markup=get_back_button(),
             parse_mode="Markdown"
         )
-        if os.path.exists(file_path):
+        if file_path and os.path.exists(file_path):
             os.remove(file_path)
