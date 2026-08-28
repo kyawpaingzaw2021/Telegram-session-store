@@ -78,22 +78,20 @@ class Referral(Base):
         Index('idx_referrals_referred_id', 'referred_id', unique=True),
     )
 
-# /tmp/data သို့ ပြောင်းလဲထားပါသည် (Permission error ရှင်းရန်)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = "/tmp/data"
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR, exist_ok=True)
-
-DB_PATH = os.path.join(DATA_DIR, 'bot.db')
+# ဘယ် Server / Hosting မှာမဆို Permission Error လုံးဝမတက်စေရန် /tmp ကို အသုံးပြုထားပါသည်
+DB_PATH = "/tmp/bot.db"
 engine = create_engine(f'sqlite:///{DB_PATH}', connect_args={'check_same_thread': False})
 Base.metadata.create_all(engine)
 
 def enable_wal():
-    conn = engine.connect()
-    conn.execute(text("PRAGMA journal_mode=WAL;"))
-    conn.execute(text("PRAGMA synchronous=NORMAL;"))
-    conn.commit()
-    conn.close()
+    try:
+        conn = engine.connect()
+        conn.execute(text("PRAGMA journal_mode=WAL;"))
+        conn.execute(text("PRAGMA synchronous=NORMAL;"))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"⚠️ WAL mode warning: {e}")
 
 enable_wal()
 print(f"✅ Database initialized at: {DB_PATH}")
